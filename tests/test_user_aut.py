@@ -3,6 +3,7 @@ import requests
 from lib.base_case import BaseCase
 from lib.assertioins import Assertions
 
+
 class TestUserAuth(BaseCase):
     exclude_params = {
         ("no_cookies"),
@@ -24,8 +25,8 @@ class TestUserAuth(BaseCase):
     def test_user_auth(self):
         responce2 = requests.get(
             "https://playground.learnqa.ru/api/user/auth",
-            headers= {"x-csrf-token": self.token},
-            cookies= {"auth_sid": self.auth_sid}
+            headers={"x-csrf-token": self.token},
+            cookies={"auth_sid": self.auth_sid}
         )
 
         Assertions.assert_json_value_by_name(
@@ -38,7 +39,8 @@ class TestUserAuth(BaseCase):
     @pytest.mark.parametrize("condition", exclude_params)
     def test_negative_auth_check(self, condition):
         if condition == "no_cookies":
-            responce2 = requests.get("https://playground.learnqa.ru/api/user/auth", headers={"x-csrf-token": self.token})
+            responce2 = requests.get("https://playground.learnqa.ru/api/user/auth",
+                                     headers={"x-csrf-token": self.token})
 
         else:
             responce2 = requests.get("https://playground.learnqa.ru/api/user/auth", cookies={"auth_sid": self.auth_sid})
@@ -49,7 +51,3 @@ class TestUserAuth(BaseCase):
             0,
             "Error"
         )
-
-
-
-
