@@ -45,3 +45,18 @@ class Assertions:
     def assert_code_status(response: Response, expected_status_code):
         assert response.status_code == expected_status_code, \
             f"Unexpected status code! Expected: {expected_status_code}. Actual: {response.status_code}"
+
+    @staticmethod
+    def assert_response_content_for_missing_field(response: Response, expected_missing_field):
+        assert response.content.decode("utf-8") == f"The following required params are missed: {expected_missing_field}", \
+            f"Unexpected missing field {response.content.decode('utf-8')}, expected missing field is {expected_missing_field} "
+
+    @staticmethod
+    def assert_response_content_for_existing_email(response: Response, expected_existing_email):
+        assert response.content.decode("utf-8") == f"Users with email '{expected_existing_email}' already exists", \
+            f"Unexpected response content {response.content.decode('utf-8')}"
+
+    @staticmethod
+    def assert_response_content_for_invalid_email_format(response: Response):
+        assert response.content.decode("utf-8") == "Invalid email format", \
+            f"Unexpected response content {response.content.decode('utf-8')}"
