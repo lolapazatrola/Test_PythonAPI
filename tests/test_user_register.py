@@ -32,7 +32,11 @@ class TestUserRegister(BaseCase):
         response = MyRequests.post("/user/", data=data)
 
         Assertions.assert_code_status(response, 400)
-        Assertions.assert_response_content_for_existing_email(response, email)
+        Assertions.assert_response_content(
+            response,
+            f"Users with email '{email}' already exists",
+            f"Unexpected response content {response.content.decode('utf-8')}"
+        )
 
     @allure.description("This test try to create users with incorrect email")
     def test_create_user_with_incorrect_email(self):
@@ -41,7 +45,11 @@ class TestUserRegister(BaseCase):
 
         response = MyRequests.post("/user/", data=data)
         Assertions.assert_code_status(response, 400)
-        Assertions.assert_response_content_for_invalid_email_format(response)
+        Assertions.assert_response_content(
+            response,
+            "Invalid email format",
+            f"Unexpected response content {response.content.decode('utf-8')}"
+        )
 
     @allure.description(f"This test try to create user with missing field {missing_field_name}")
     @pytest.mark.parametrize("missing_field", missing_field_name)
@@ -50,7 +58,11 @@ class TestUserRegister(BaseCase):
 
         response = MyRequests.post("/user/", data=data)
         Assertions.assert_code_status(response, 400)
-        Assertions.assert_response_content_for_missing_field(response, missing_field)
+        Assertions.assert_response_content(
+            response,
+            f"The following required params are missed: {missing_field}",
+            f"Unexpected missing field {response.content.decode('utf-8')}, expected missing field is {missing_field}"
+            )
 
     @allure.description("This test try to create user with username one symbol")
     def test_create_user_with_username_one_symbol(self):
@@ -59,8 +71,11 @@ class TestUserRegister(BaseCase):
 
         response = MyRequests.post("/user/", data=data)
         Assertions.assert_code_status(response, 400)
-        assert response.content.decode("utf-8") == "The value of 'username' field is too short", \
+        Assertions.assert_response_content(
+            response,
+            "The value of 'username' field is too short",
             f"Unexpected response content {response.content.decode('utf-8')}"
+        )
 
     @allure.description("This test try to create user with username longer then 250 symbol")
     def test_create_user_with_username_longer_250_symbol(self):
@@ -69,5 +84,8 @@ class TestUserRegister(BaseCase):
 
         response = MyRequests.post("/user/", data=data)
         Assertions.assert_code_status(response, 400)
-        assert response.content.decode("utf-8") == "The value of 'username' field is too long", \
+        Assertions.assert_response_content(
+            response,
+            "The value of 'username' field is too long",
             f"Unexpected response content {response.content.decode('utf-8')}"
+        )

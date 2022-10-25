@@ -47,6 +47,10 @@ class Assertions:
             f"Unexpected status code! Expected: {expected_status_code}. Actual: {response.status_code}"
 
     @staticmethod
+    def assert_response_content(response: Response, expected_value, error_message):
+        assert response.content.decode("utf-8") == expected_value, error_message
+
+    @staticmethod
     def assert_response_content_for_missing_field(response: Response, expected_missing_field):
         assert response.content.decode("utf-8") == f"The following required params are missed: {expected_missing_field}", \
             f"Unexpected missing field {response.content.decode('utf-8')}, expected missing field is {expected_missing_field} "
